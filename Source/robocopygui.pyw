@@ -7,10 +7,11 @@ This programma allows the user to choose the source and destination
 directory via browsing and then start RoboCopy in a coomand window.
 """
 
-__version__   = "0.9.0"
+__author__    = "R.J.L. de Bruin"
+__copyright__ = "Copyright 2021, R.J.L. de Bruin"
+__license__   = "MIT"
 
-__author__    = "Rob de Bruin"
-__copyright__ = "Copyright 2021, Koninklijke Bibliotheek"
+__version__   = "0.9.0"
 
 __docformat__ = 'reStructuredText en'
 
