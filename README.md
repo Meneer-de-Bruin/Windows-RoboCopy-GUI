@@ -19,5 +19,5 @@ After having started a RoboCopy job, you can immediately start the next RoboCopy
 RoboCopy must be installed on your Windows machine and it must be runable from the commandline.
 
 # Distribution
-The distrobution was create by running pyinstaller from the commandline in the source directory:
+The distrobution was create by running pyinstaller from the commandline in the source directory:  
 python -O -m PyInstaller --clean --onefile --distpath ..distpath ..\Distribution robocopygui.pyw
