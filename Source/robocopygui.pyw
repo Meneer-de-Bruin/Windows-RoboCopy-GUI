@@ -26,7 +26,7 @@ from tkinter import messagebox
 from tkinter import font
 
 # Config
-from config import workflow_config as cfg
+from config import robocopy_config as cfg
 
 # GUI
 from gui.tkExtension import tkWorkFlow
@@ -40,25 +40,29 @@ from gui import robocopyGUI
 ### CLASS: __workflowAPP ###
 class workFlowAPP(tkWorkFlow.workFlow):
 
-    def __init__(self, splashImage, splashText):
+    def __init__(self):
         about = {} # init
-        about['title'] = 'RoboCopy'
+        about['title'] = 'RoboCopy GUI'
         about['version'] = __version__
+        about['author'] = __author__
+        about['copyright'] = __copyright__
+        about['license'] = __license__
+     
                     
-        super().__init__(splashImage, splashText, self.notebooks, about, cfg.help)
+        super().__init__(self.notebooks, about, cfg.help)
 
     def notebooks(self, notebook):
         theFrame = ttk.Frame()
         robocopyGUI.robocopyGUI(theFrame)
         
-        notebook.add(theFrame, text='RoboCopy')
+        notebook.add(theFrame, text='File Selection')
 
 ########
 # MAIN #
 ########
 def main():
    
-    app = workFlowAPP(cfg.splash_image, cfg.splash_text)
+    app = workFlowAPP()
     
     # This application always, always stays on top
     app.attributes('-topmost',True)

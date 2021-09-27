@@ -19,9 +19,6 @@ import pathlib
 # date and time
 from datetime import datetime
 
-# own tk gui extensions #
-#from gui.tkExtension import tkSimpleDialog
-
 # configuration #
 from config import robocopy_config as cfg
 
@@ -73,7 +70,7 @@ class robocopyGUI(ttk.Frame):
         tFrame = ttk.Frame(self)
         
         ### Start robocopy button ###
-        ttk.Button(tFrame, text="Start", command=self.__startRobocopy).grid(row=0, column=0, sticky=tk.W, padx=10, pady=10)
+        ttk.Button(tFrame, text="Start RoboCopy", command=self.__startRobocopy).grid(row=0, column=0, sticky=tk.W, padx=10, pady=10)
         
         tFrame.grid(sticky=tk.W)
        
@@ -114,14 +111,19 @@ class robocopyGUI(ttk.Frame):
         if (src in dst):
             self.__showError(cfg.errors['R4'])
             return  
-                        
+                   
+        # check if dst already exists
+        # give warning an option to stop
+        if(os.path.isdir(dst)):
+            # give warning
+            if(self.__showQuestion(cfg.errors['R6'], dst) == False):
+                return
+
         # determine jobfile
         #jobpath = str(pathlib.Path(__file__).parent.parent.resolve())
         # jobpath = os.environ['USERPROFILE']
         jobpath = os.getcwd()
         jobfile = jobpath+cfg.jobfile
-        
-        print(jobfile)
         
         # check if job file exists
         if (not os.path.isfile(jobfile)):
@@ -148,10 +150,8 @@ class robocopyGUI(ttk.Frame):
         # construct cmdline
         cmdline = cfg.cmdline.format(logfile=logfile, jobfile=jobfile, source=src, destination=dst)
         
-        # check if robocopy OK
-        result = self.__showQuestion("Start :\n"+cmdline)
-        
-        if( result == True):
+        # check if robocopy OK - and start or stop    
+        if( self.__showQuestion("Start :\n"+cmdline) == True):
           # OK - run robocopy
           subprocess.run(cmdline, shell=True)
 
@@ -160,7 +160,7 @@ class robocopyGUI(ttk.Frame):
           
         # else
           # NOK
-          # no action
+          # no action - return (automatic)
         
     def __selectSource(self):
         filename = filedialog.askdirectory()
