@@ -16,8 +16,16 @@ Also the application makes a log which has the following name: <systemdate/time>
 After having started a RoboCopy job, you can immediately start the next RoboCopy job. Each job uses resources so starting too many jobs may adversely effect other running jobs or Window processes.
 
 # Prerequisites
-RoboCopy must be installed on your Windows machine and it must be runable from the commandline.
+RoboCopy must be installed on your machine and it must be runable from the commandline. 
+
+The distribution was specificly made for Windows 7.
+
+# Installation
+You can download the source and make your own distribution, or you can download all files from the distribution directory and place them on your own machine. Downloading only works for windows machines. 
 
 # Distribution
 The distribution was created by running pyinstaller from the commandline in the source directory, as follows:  
 python -O -m PyInstaller --clean --onefile --distpath ..distpath ..\Distribution robocopygui.pyw
+
+# Support
+As  my time is extremly limited I can offer no support what-so-ever. But hey, it's free.
