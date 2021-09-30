@@ -26,11 +26,11 @@ errors = {'R1' : 'No batch folder selected as source.',
           'R3' : 'Source and destination folder must be different.',
           'R4' : 'Destination cannot be part of source',
           'R5' : 'No robocopy job file found:\n%s',
-          'R6' : 'Destination folder %s already exists'
+          'R6' : 'Destination folder %s already exists. Overwrite?'
          }
          
 #help text
-help = 'RoboCopy GUI is a simpel frontend to RoboCopy\n\
+help = 'RoboCopy GUI is a simple frontend to RoboCopy\n\
 \n\
 The application uses a RoboCopy jobfile named "robocopy.rcj" which must be in the same \
 directory as the application itself. This jobfile contains all options that are given to \

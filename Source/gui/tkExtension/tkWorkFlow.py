@@ -31,6 +31,9 @@ class workFlow(tk.Tk):
     def __init__(self, notebooks, about, help = None, sleep = 0):
         tk.Tk.__init__(self)
  
+        self.about = about # list of about values
+        self.help = help # can be empty
+        
         # create GUI for workflow
         s = ttk.Style()
  
@@ -41,23 +44,56 @@ class workFlow(tk.Tk):
         elif _platform == "darwin":
             s.theme_use("aqua")
   
-        _workflowGUI(self, notebooks, about, help) 
+        self.title(about.get('title'))
+        self.resizable(False, False)
+        
+        _menubar(self, self.about, self.help)
+        _workflowGUI(self, notebooks) 
 
-        self.deiconify()
+        # self.deiconify()
 
-### CLASS: __workflowGUI ###
+### CLASS: _menubar ###
+class _menubar(tk.Menu):
+    def __init__(self, parent, about, help):
+        tk.Menu.__init__(self, parent)
+
+        self.parent = parent # Needed dialogboxes
+        
+        self.__createMenubar()
+        
+        self.parent.config(menu=self)
+        
+    def __createMenubar(self):
+        # menu bar
+        # OPTIONS <TODO>
+
+        # HELP
+        helpmenu = tk.Menu(self, tearoff=0)
+        
+        if (not self.parent.help == None):
+            helpmenu.add_command(label="Help", command=self.__showHelpDialog)
+            
+        
+        helpmenu.add_command(label="About", command=self.__showAboutDialog, accelerator="F1")
+        self.bind_all("<F1>", lambda e: self.__showAboutDialog())  # Implement accelerator
+        
+        self.add_cascade(label="Help", menu=helpmenu)
+        
+    def __showAboutDialog(self):
+        _aboutDialog(self.parent)
+        
+    def __showHelpDialog(self):
+        _helpDialog(self.parent)
+        
+### CLASS: _workflowGUI ###
 class _workflowGUI(ttk.Frame):
     
-    def __init__(self, parent, notebooks, about, help):
+    def __init__(self, parent, notebooks):
         ttk.Frame.__init__(self, parent)
 
-        self.parent = parent # Needed for exit
+        #self.parent = parent # Needed for exit
         self.notebooks = notebooks # hookback to main function for creation of notebooks
-        self.about = about # list of about values
-        self.help = help # can be empty
         
-        self.parent.title(self.about.get('title'))
-        self.parent.resizable(False, False)
         
         self.__createWidgets()
         self.grid()
@@ -67,16 +103,16 @@ class _workflowGUI(ttk.Frame):
         # Top buttons: About, Exit
         tFrame = ttk.Frame(self)
 
-        ttk.Button(tFrame, text='About', command=self.__showAboutDialog).grid(row=0, column=0,padx=10,pady=10)
+        #ttk.Button(tFrame, text='About', command=self.__showAboutDialog).grid(row=0, column=0,padx=10,pady=10)
         
-        if (not self.help == None):
-            ttk.Button(tFrame, text='Help', command=self.__showHelpDialog).grid(row=0, column=1,padx=10,pady=10)
+        #if (not self.help == None):
+        #    ttk.Button(tFrame, text='Help', command=self.__showHelpDialog).grid(row=0, column=1,padx=10,pady=10)
             
         # ttk.Button(tFrame, text='Exit', command=self.parent.destroy).grid(row=0, column=2,padx=10,pady=10)
 
-        tFrame.grid(sticky=tk.E)
+        #tFrame.grid(sticky=tk.E)
         
-        tFrame = ttk.Frame(self)
+        #tFrame = ttk.Frame(self)
 
         # Tabs
         notebook = ttk.Notebook(tFrame)
@@ -88,12 +124,6 @@ class _workflowGUI(ttk.Frame):
 
         # add notebooks
         self.notebooks(notebook)
-
-    def __showAboutDialog(self):
-        _aboutDialog(self)
-        
-    def __showHelpDialog(self):
-        _helpDialog(self)
 
 class _helpDialog(tkSimpleDialog.SimpleDialog):
 

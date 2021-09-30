@@ -118,21 +118,11 @@ class robocopyGUI(ttk.Frame):
             # give warning
             if(self.__showQuestion(cfg.errors['R6'], dst) == False):
                 return
-
-        # determine jobfile
-        #jobpath = str(pathlib.Path(__file__).parent.parent.resolve())
-        # jobpath = os.environ['USERPROFILE']
-        jobpath = os.getcwd()
-        jobfile = jobpath+cfg.jobfile
-        
-        # check if job file exists
-        if (not os.path.isfile(jobfile)):
-            self.__showError(cfg.errors['R5'], jobfile)
-            return
         
         # determine logfile
         # determine and check log_path
-        log_path = jobpath+cfg.log_folder+'/'
+        home_path = os.getcwd()
+        log_path = home_path+cfg.log_folder+'/'
         
         # check if log directory exists if not make it
         if (not os.path.isdir(log_path)):
@@ -146,21 +136,78 @@ class robocopyGUI(ttk.Frame):
         date_time = datetime.now().strftime("%Y%m%d%H%M%S")
 
         logfile = '"'+log_path+date_time+'_'+batch+'.log"'
+
+        # determine jobfile
+        jobfile = home_path+cfg.jobfile
+                
+        # check if job file exists
+        if (not os.path.isfile(jobfile)):
+            self.__showError(cfg.errors['R5'], jobfile)
+            return
+
+        # copy to log directory
+        log_jobfile=log_path+date_time+'_'+batch+'.rcj'
+    
+        # copy file with own function check if returns True
+
+        try:
+            self.__copyrcj(jobfile, log_jobfile)
+        except Exception as e:
+            self.__showError(str(e))
+            return
         
         # construct cmdline
-        cmdline = cfg.cmdline.format(logfile=logfile, jobfile=jobfile, source=src, destination=dst)
-        
+        cmdline = cfg.cmdline.format(logfile=logfile, jobfile=log_jobfile, source=src, destination=dst)
+
+            
         # check if robocopy OK - and start or stop    
         if( self.__showQuestion("Start :\n"+cmdline) == True):
-          # OK - run robocopy
-          subprocess.run(cmdline, shell=True)
-
-          # clear source - ready for next batch selection
-          self.sourcePath.set('')
+            # OK - run robocopy
+            try:
+                subprocess.run(cmdline, shell=True)
+            except Exception as e:
+                self.__showError(str(e))
+                return
+            
+            # clear source - ready for next batch selection
+            self.sourcePath.set('')
           
         # else
           # NOK
           # no action - return (automatic)
+
+    def __copyrcj(self, src, dst):
+        # open src for reading
+        try:
+            f_src = open(src, "r")
+        except Exception as e:
+            raise
+        
+        # open dst for writing
+        try:
+            f_dst = open(dst, "w")
+        except Exception as e:
+            raise
+ 
+        try: 
+            # write /NOSD and /NODD to dst
+            f_dst.write("/NOSD\n")
+            f_dst.write("/NODD\n")
+            
+        except Exception as e:
+            raise
+        
+        # for all lines in src -> write to dst
+        for line in f_src:
+            # if line contains /NOSD or /NODD then skip
+            if ("/NOSD" not in line and "/NODD" not in line):
+                try:
+                    f_dst.write(line)
+                except Exception as e:
+                    raise
+        
+        f_src.close()
+        f_dst.close()
         
     def __selectSource(self):
         filename = filedialog.askdirectory()
