@@ -25,7 +25,7 @@ You can download the source and make your own distribution, or you can download 
 
 # Distribution
 The distribution was created by running pyinstaller from the commandline in the source directory, as follows:  
-python -O -m PyInstaller --clean --onefile --distpath ..distpath ..\Distribution robocopygui.pyw
+python -O -m PyInstaller --clean --onefile --distpath ..\Distribution robocopygui.pyw
 
 # Support
 As  my time is extremly limited I can offer no support what-so-ever. But hey, it's free.
