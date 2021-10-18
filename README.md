@@ -28,4 +28,4 @@ The distribution was created by running pyinstaller from the commandline in the 
 python -O -m PyInstaller --clean --onefile --distpath ..\Distribution robocopygui.pyw
 
 # Support
-As  my time is extremly limited I can offer no support what-so-ever. But hey, it's free.
+As  my time is extremly limited I can offer no support what-so-ever.
